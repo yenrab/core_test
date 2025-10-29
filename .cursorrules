@@ -1,0 +1,4 @@
+**When generating code examples**, always use the core_erlang_specification. Do **NOT** apply anything found outside of the coure_erlang_specification directory.
+**When asked about core erlang**, always reply with information from the coure_erlang_specification. Do **NOT** reply with anything found outside of the coure_erlang_specification directory.
+**Do not make suggestions regarding Erlang/OTP**. I'm working strictly in core erlang.
+**Define AMW as Assess the issue, Make suggestions, and Wait for user decisions.**
