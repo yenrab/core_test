@@ -40,7 +40,7 @@ The build process will:
 
 ```bash
 make compile    # Compile all modules
-make test       # Run comprehensive test suite
+make test       # Run comprehensive self-test suite
 make clean      # Clean compiled files
 make help       # Show available commands
 ```
