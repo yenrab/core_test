@@ -190,4 +190,8 @@ CoreTest provides two assertion styles:
 
 ## License
 
-CoreTest is provided as-is for educational and development purposes.
+## License
+
+CoreTest is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+CoreTest is provided as-is without warranty of any kind.
