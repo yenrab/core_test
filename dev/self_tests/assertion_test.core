@@ -1,0 +1,14 @@
+module 'assertion_test'
+    ['test_new_assertions'/0]
+    attributes []
+    
+    'test_new_assertions'/0 =
+        fun () ->
+            let <Assert1> = call 'test_assertions':'assert_false' ('false')
+            in let <Assert2> = call 'test_assertions':'assert_false' ('true')
+            in let <Assert3> = call 'test_assertions':'assert_not_equal' (5, 3)
+            in let <Assert4> = call 'test_assertions':'assert_not_equal' (5, 5)
+            in let <Assert5> = call 'test_assertions':'assert_match' (5, 5)
+            in let <Assert6> = call 'test_assertions':'assert_match' (5, 3)
+            in {Assert1, Assert2, Assert3, Assert4, Assert5, Assert6}
+end

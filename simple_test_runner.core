@@ -1,0 +1,65 @@
+module 'simple_test_runner'
+    ['run_test_function'/2, 'run_module_tests'/2, 'format_result'/1, 'extract_test_functions'/1, 'filter_test_functions'/1]
+    attributes []
+    'run_test_function'/2 =
+        fun (ModuleName, FunctionName) ->
+            case ModuleName of
+                <'test_module'> when 'true' ->
+                    case FunctionName of
+                        <'test_function1'> when 'true' ->
+                            {'test_name', FunctionName, 'result', call 'test_module':'test_function1' ()}
+                        <'test_function2'> when 'true' ->
+                            {'test_name', FunctionName, 'result', call 'test_module':'test_function2' ()}
+                        <_> when 'true' ->
+                            {'error', 'unknown_function'}
+                    end
+                <'simple_test'> when 'true' ->
+                    case FunctionName of
+                        <'test_assertions'> when 'true' ->
+                            {'test_name', FunctionName, 'result', call 'simple_test':'test_assertions' ()}
+                        <_> when 'true' ->
+                            {'error', 'unknown_function'}
+                    end
+                <_> when 'true' ->
+                    {'error', 'unknown_module'}
+            end
+    
+    'run_module_tests'/2 =
+        fun (ModuleName, TestFunctions) ->
+            case TestFunctions of
+                <[]> when 'true' -> []
+                <[FunctionName|Rest]> when 'true' ->
+                    let <TestResult> = apply 'run_test_function'/2 (ModuleName, FunctionName)
+                    in let <RestResults> = apply 'run_module_tests'/2 (ModuleName, Rest)
+                    in [TestResult|RestResults]
+            end
+    
+    'format_result'/1 =
+        fun (TestResult) ->
+            TestResult
+    
+    'extract_test_functions'/1 =
+        fun (ModuleName) ->
+            case ModuleName of
+                <'test_module'> when 'true' ->
+                    ['test_function1', 'test_function2']
+                <'simple_test'> when 'true' ->
+                    ['test_assertions']
+                <_> when 'true' ->
+                    []
+            end
+    
+    'filter_test_functions'/1 =
+        fun (Exports) ->
+            case Exports of
+                <[]> when 'true' -> []
+                <[FunctionName|Rest]> when 'true' ->
+                    let <FilteredRest> = apply 'filter_test_functions'/1 (Rest)
+                    in case FunctionName of
+                        <'test_function1'> when 'true' -> [FunctionName|FilteredRest]
+                        <'test_function2'> when 'true' -> [FunctionName|FilteredRest]
+                        <'test_assertions'> when 'true' -> [FunctionName|FilteredRest]
+                        <_> when 'true' -> FilteredRest
+                    end
+            end
+end

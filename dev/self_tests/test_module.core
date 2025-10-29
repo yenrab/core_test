@@ -1,0 +1,11 @@
+module 'test_module'
+    ['test_function1'/0, 'test_function2'/0]
+    attributes []
+    'test_function1'/0 =
+        fun () ->
+            {'pass'}
+    
+    'test_function2'/0 =
+        fun () ->
+            {'fail', 1, 2}
+end

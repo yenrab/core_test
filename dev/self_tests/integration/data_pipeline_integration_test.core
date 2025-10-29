@@ -1,0 +1,12 @@
+module 'data_pipeline_integration_test'
+    ['test_pipeline_flow'/0, 'test_error_handling'/0]
+    attributes []
+    
+    'test_pipeline_flow'/0 =
+        fun () ->
+            {'pass'}
+    
+    'test_error_handling'/0 =
+        fun () ->
+            {'fail', 'expected_error', 'no_error'}
+end

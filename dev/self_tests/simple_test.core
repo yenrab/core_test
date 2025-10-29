@@ -1,0 +1,23 @@
+module 'simple_test'
+    ['test_assertions'/0]
+    attributes []
+    'test_assertions'/0 =
+        fun () ->
+            let <Assert1> = case call 'erlang':'==' (5, 5) of
+                <'true'> when 'true' -> {'pass'}
+                <'false'> when 'true' -> {'fail', 5, 5}
+            end
+            in let <Assert2> = case call 'erlang':'==' (3, 4) of
+                <'true'> when 'true' -> {'pass'}
+                <'false'> when 'true' -> {'fail', 3, 4}
+            end
+            in let <Assert3> = case 'true' of
+                <'true'> when 'true' -> {'pass'}
+                <'false'> when 'true' -> {'fail', 'true', 'true'}
+            end
+            in let <Assert4> = case 'false' of
+                <'true'> when 'true' -> {'pass'}
+                <'false'> when 'true' -> {'fail', 'false', 'true'}
+            end
+            in {Assert1, Assert2, Assert3, Assert4}
+end

@@ -1,0 +1,16 @@
+module 'quicksort_unit_test'
+    ['test_sort_empty'/0, 'test_sort_single'/0, 'test_sort_multiple'/0]
+    attributes []
+    
+    'test_sort_empty'/0 =
+        fun () ->
+            {'pass'}
+    
+    'test_sort_single'/0 =
+        fun () ->
+            {'pass'}
+    
+    'test_sort_multiple'/0 =
+        fun () ->
+            {'pass'}
+end

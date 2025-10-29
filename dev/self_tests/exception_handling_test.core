@@ -1,0 +1,14 @@
+module 'exception_handling_test'
+    ['test_successful_throwing_assertion'/0, 'test_failing_throwing_assertion'/0]
+    attributes []
+    
+    'test_successful_throwing_assertion'/0 =
+        fun () ->
+            let <Result> = call 'test_assertions':'assert_equal!' (5, 5)
+            in Result
+    
+    'test_failing_throwing_assertion'/0 =
+        fun () ->
+            let <Result> = call 'test_assertions':'assert_equal!' (5, 3)
+            in Result
+end

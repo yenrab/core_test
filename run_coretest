@@ -1,0 +1,151 @@
+#!/bin/bash
+
+# CoreTest - Core Erlang Testing Framework
+# Command-line interface for running tests
+
+# Default values
+VERBOSE=0
+UNIT_ONLY=0
+INTEGRATION_ONLY=0
+SYSTEM_ONLY=0
+TARGET_DIR="."
+HELP=0
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Function to display help
+show_help() {
+    echo "CoreTest - Core Erlang Testing Framework"
+    echo ""
+    echo "Usage: $0 [OPTIONS] [DIRECTORY]"
+    echo ""
+    echo "Options:"
+    echo "  --verbose, -v     Enable verbose output mode"
+    echo "  --unit, -u        Run only unit tests"
+    echo "  --integration, -i Run only integration tests"
+    echo "  --system, -s      Run only system tests"
+    echo "  --help, -h        Show this help message"
+    echo ""
+    echo "Arguments:"
+    echo "  DIRECTORY         Directory to run tests in (default: current directory)"
+    echo ""
+    echo "Examples:"
+    echo "  $0                    # Run all tests in current directory"
+    echo "  $0 --verbose          # Run all tests with verbose output"
+    echo "  $0 --unit             # Run only unit tests"
+    echo "  $0 /path/to/tests     # Run tests in specific directory"
+    echo "  $0 --verbose --unit   # Run unit tests with verbose output"
+}
+
+# Function to run tests
+run_tests() {
+    local dir="$1"
+    local verbose="$2"
+    local unit_only="$3"
+    local integration_only="$4"
+    local system_only="$5"
+    
+    echo -e "${BLUE}CoreTest - Running tests in: $dir${NC}"
+    echo ""
+    
+    # Change to the target directory
+    cd "$dir" || {
+        echo -e "${RED}Error: Cannot access directory '$dir'${NC}"
+        exit 1
+    }
+    
+    # Check if we're in the core_test directory
+    if [ ! -f "test_framework.core" ]; then
+        echo -e "${RED}Error: Not in a CoreTest directory. Please run from core_test/ directory.${NC}"
+        exit 1
+    fi
+    
+    # Build the erl command based on options
+    local erl_cmd="ERL_MAX_PORTS=1024 erl -pa . -pa dev/self_tests -noshell -eval"
+    
+    if [ "$verbose" = "1" ]; then
+        erl_cmd="$erl_cmd \"code:load_file(test_framework), TestFiles = test_framework:discover_tests_recursive('.'), TestResults = test_framework:run_test_files_with_categories(TestFiles, 1), FormattedResults = test_framework:format_results(TestResults, 1), io:format('~p~n', [FormattedResults])\" -s init stop"
+    else
+        erl_cmd="$erl_cmd \"code:load_file(test_framework), TestFiles = test_framework:discover_tests_recursive('.'), TestResults = test_framework:run_test_files_with_categories(TestFiles, 1), FormattedResults = test_framework:format_results(TestResults, 0), io:format('~p~n', [FormattedResults])\" -s init stop"
+    fi
+    
+    # Run the tests
+    echo -e "${YELLOW}Running CoreTest...${NC}"
+    eval $erl_cmd
+    
+    local exit_code=$?
+    
+    if [ $exit_code -eq 0 ]; then
+        echo -e "${GREEN}CoreTest completed successfully${NC}"
+    else
+        echo -e "${RED}CoreTest failed with exit code $exit_code${NC}"
+    fi
+    
+    return $exit_code
+}
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --verbose|-v)
+            VERBOSE=1
+            shift
+            ;;
+        --unit|-u)
+            UNIT_ONLY=1
+            shift
+            ;;
+        --integration|-i)
+            INTEGRATION_ONLY=1
+            shift
+            ;;
+        --system|-s)
+            SYSTEM_ONLY=1
+            shift
+            ;;
+        --help|-h)
+            HELP=1
+            shift
+            ;;
+        -*)
+            echo -e "${RED}Error: Unknown option '$1'${NC}"
+            echo "Use --help for usage information"
+            exit 1
+            ;;
+        *)
+            TARGET_DIR="$1"
+            shift
+            ;;
+    esac
+done
+
+# Show help if requested
+if [ "$HELP" = "1" ]; then
+    show_help
+    exit 0
+fi
+
+# Validate options
+if [ "$UNIT_ONLY" = "1" ] && [ "$INTEGRATION_ONLY" = "1" ]; then
+    echo -e "${RED}Error: Cannot specify both --unit and --integration${NC}"
+    exit 1
+fi
+
+if [ "$UNIT_ONLY" = "1" ] && [ "$SYSTEM_ONLY" = "1" ]; then
+    echo -e "${RED}Error: Cannot specify both --unit and --system${NC}"
+    exit 1
+fi
+
+if [ "$INTEGRATION_ONLY" = "1" ] && [ "$SYSTEM_ONLY" = "1" ]; then
+    echo -e "${RED}Error: Cannot specify both --integration and --system${NC}"
+    exit 1
+fi
+
+# Run the tests
+run_tests "$TARGET_DIR" "$VERBOSE" "$UNIT_ONLY" "$INTEGRATION_ONLY" "$SYSTEM_ONLY"
+exit $?

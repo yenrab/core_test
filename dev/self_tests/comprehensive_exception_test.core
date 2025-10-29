@@ -1,0 +1,16 @@
+module 'comprehensive_exception_test'
+    ['test_mixed_assertions'/0, 'test_tuple_assertions'/0, 'test_throwing_assertions'/0]
+    attributes []
+    
+    'test_mixed_assertions'/0 =
+        fun () ->
+            {'mixed_assertions_test', 'completed'}
+    
+    'test_tuple_assertions'/0 =
+        fun () ->
+            {'tuple_assertions_test', 'completed'}
+    
+    'test_throwing_assertions'/0 =
+        fun () ->
+            {'throwing_assertions_test', 'completed'}
+end

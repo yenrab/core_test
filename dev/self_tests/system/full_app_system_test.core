@@ -1,0 +1,12 @@
+module 'full_app_system_test'
+    ['test_end_to_end'/0, 'test_performance'/0]
+    attributes []
+    
+    'test_end_to_end'/0 =
+        fun () ->
+            {'pass'}
+    
+    'test_performance'/0 =
+        fun () ->
+            {'pass'}
+end

@@ -1,0 +1,22 @@
+module 'exception_assertion_test'
+    ['test_throwing_assertions'/0, 'test_successful_assertions'/0]
+    attributes []
+    
+    'test_successful_assertions'/0 =
+        fun () ->
+            let <Result1> = call 'test_assertions':'assert_equal!' (5, 5)
+            in let <Result2> = call 'test_assertions':'assert_true!' ('true')
+            in let <Result3> = call 'test_assertions':'assert_false!' ('false')
+            in let <Result4> = call 'test_assertions':'assert_not_equal!' (5, 3)
+            in let <Result5> = call 'test_assertions':'assert_match!' (5, 5)
+            in {Result1, Result2, Result3, Result4, Result5}
+    
+    'test_throwing_assertions'/0 =
+        fun () ->
+            let <Result1> = call 'test_assertions':'assert_equal!' (5, 3)
+            in let <Result2> = call 'test_assertions':'assert_true!' ('false')
+            in let <Result3> = call 'test_assertions':'assert_false!' ('true')
+            in let <Result4> = call 'test_assertions':'assert_not_equal!' (5, 5)
+            in let <Result5> = call 'test_assertions':'assert_match!' (5, 3)
+            in {Result1, Result2, Result3, Result4, Result5}
+end
